@@ -12,7 +12,20 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [AppStateService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private appStateService: AppStateService) {
+  }
+
+  hmrOnDestroy(store) {
+    store.appState = this.appStateService.getState();
+  }
+
+  hmrOnInit(store) {
+    if (store && store.appState) {
+      this.appStateService.setState(store.appState);
+    }
+  }
+}
